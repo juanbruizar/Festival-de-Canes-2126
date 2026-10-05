@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Huellas del Mal - Caso Canino</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: #0b0c10;
+      color: #eaeaea;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 10px;
+    }
+
+    .game-wrapper {
+      width: 100%;
+      max-width: 1024px;
+      background: #12141a;
+      border: 2px solid #332a22;
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.9), 0 0 15px rgba(180, 80, 40, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* PANTALLAS */
+    .screen {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* IMAGEN CONTENEDOR */
+    .image-stage {
+      position: relative;
+      width: 100%;
+      line-height: 0;
+      background: #000;
+    }
+
+    .image-stage img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* BOTONES ESTILO NOIR / DETECTIVE */
+    .btn-action {
+      background: linear-gradient(180deg, #99281a 0%, #5e1108 100%);
+      color: #fff2e0;
+      border: 2px solid #e28c52;
+      padding: 14px 34px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 6px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6), 0 0 10px rgba(226, 140, 82, 0.4);
+      transition: all 0.2s ease;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .btn-action:hover {
+      background: linear-gradient(180deg, #b83322 0%, #7c180e 100%);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.8), 0 0 18px rgba(240, 160, 100, 0.7);
+      transform: translateY(-2px);
+    }
+
+    .btn-action:active {
+      transform: translateY(1px);
+    }
+
+    /* BOTON PANTALLA INICIO SOBRE LA IMAGEN */
+    .start-overlay {
+      position: absolute;
+      bottom: 25px;
+      right: 40px;
+      z-index: 10;
+    }
+
+    /* BARRA SUPERIOR E INFERIOR DE INVESTIGACIÓN */
+    .investigation-header {
+      background: #18191f;
+      border-bottom: 2px solid #2d261e;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+
+    .badge-case {
+      color: #e5a045;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .stats-container {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .stat-badge {
+      background: #0a0b0e;
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: 1px solid #3d352b;
+      color: #f0c386;
+    }
+
+    /* PISTA / HINT */
+    .btn-hint {
+      background: #2b261e;
+      border: 1px solid #c98e40;
+      color: #f9d89b;
+      padding: 5px 12px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-hint:hover {
+      background: #463b28;
+    }
+
+    /* LISTA DE OBJETOS A BUSCAR TIPO CRIMINAL CASE */
+    .clues-board {
+      background: #14161b;
+      border-top: 2px solid #2f2720;
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .clues-title {
+      font-size: 0.85rem;
+      color: #9f9b93;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .clues-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+    }
+
+    .clue-pill {
+      background: #20222a;
+      border: 1px solid #443c32;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #f7e6cf;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: default;
+    }
+
+    .clue-pill.found {
+      background: #12331f;
+      border-color: #27ae60;
+      color: #8be4af;
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+
+    .clue-pill.found::before {
+      content: '✓';
+      font-weight: bold;
+      color: #2ecc71;
+    }
+
+    /* ZONAS CLICKABLES (HOTSPOTS) */
+    .hotspot {
+      position: absolute;
+      cursor: crosshair;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      /* background: rgba(255, 0, 0, 0.3); */
+    }
+
+    .hotspot.found {
+      pointer-events: none;
+    }
+
+    /* MARCADOR DE DESCUBRIMIENTO */
+    .found-marker {
+      position: absolute;
+      border: 3px solid #2ecc71;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      animation: pulseFound 0.7s forwards;
+      pointer-events: none;
+      box-shadow: 0 0 15px #2ecc71;
+    }
+
+    @keyframes pulseFound {
+      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+    }
+
+    /* DESTELLO DE PISTA */
+    .hint-highlight {
+      animation: hintFlash 1.5s 3;
+    }
+
+    @keyframes hintFlash {
+      0%, 100% { box-shadow: none; border: none; }
+      50% { box-shadow: 0 0 20px 6px #f39c12; border: 2px solid #f1c40f; }
+    }
+
+    /* FEEDBACK DE ERROR (CLICK EN FALSO) */
+    .wrong-click {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border: 2px solid #e74c3c;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.5);
+      animation: fadeOutWrong 0.5s forwards;
+      pointer-events: none;
+    }
+
+    @keyframes fadeOutWrong {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+    }
+
+    /* MODAL DE CASO RESUELTO */
+    .victory-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 10, 14, 0.93);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 30px;
+      z-index: 50;
+      backdrop-filter: blur(4px);
+    }
+
+    .victory-modal.active {
+      display: flex;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .victory-modal h2 {
+      font-size: 2.2rem;
+      color: #e5a045;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+      text-shadow: 0 0 10px rgba(229, 160, 69, 0.5);
+    }
+
+    .victory-modal p {
+      font-size: 1.1rem;
+      color: #c9c7bf;
+      max-width: 520px;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .btn-secondary {
+      background: #2a2d36;
+      border: 1px solid #5a544b;
+      color: #f1ede6;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover {
+      background: #3e424e;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-wrapper">
+
+    <!-- PANTALLA 1: MENÚ DE INICIO -->
+    <div id="screen-start" class="screen active">
+      <div class="image-stage">
+        <img src="uploads/image-1.png" alt="Huellas del Mal - Pantalla Principal">
+        <div class="start-overlay">
+          <button id="btn-start" class="btn-action">▶ Iniciar Investigación</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANTALLA 2: ESCENA DEL CRIMEN -->
+    <div id="screen-game" class="screen">
+      <!-- Barra superior -->
+      <div class="investigation-header">
+        <span class="badge-case">🐾 Caso #01: El Misterio del Almacén Oculto</span>
+        <div class="stats-container">
+          <span class="stat-badge">Evidencias: <span id="counter-clues">0</span> / <span id="total-clues">10</span></span>
+          <button id="btn-hint" class="btn-hint" title="Revela un objeto al azar">💡 Pista</button>
+          <button id="btn-back-menu" class="btn-secondary">Menú</button>
+        </div>
+      </div>
+
+      <!-- Escena interactiva -->
+      <div class="image-stage" id="crime-scene">
+        <img src="uploads/image-2.png" alt="Escena del Crimen">
+
+        <!-- 1. Hueso en la vitrina rota -->
+        <div class="hotspot" data-id="hueso" title="Hueso en vitrina"
+             style="top: 61%; left: 19%; width: 14%; height: 11%;"></div>
+
+        <!-- 2. Martillo ensangrentado en estante -->
+        <div class="hotspot" data-id="martillo" title="Martillo sospechoso"
+             style="top: 36%; left: 44.5%; width: 9%; height: 10%;"></div>
+
+        <!-- 3. Sobre de evidencia -->
+        <div class="hotspot" data-id="sobre" title="Sobre de evidencia"
+             style="top: 72%; left: 56%; width: 17.5%; height: 15%;"></div>
+
+        <!-- 4. Lupa en la mesa -->
+        <div class="hotspot" data-id="lupa" title="Lupa del detective"
+             style="top: 75%; left: 73.5%; width: 8.5%; height: 11%;"></div>
+
+        <!-- 5. Cámara rota en la pared -->
+        <div class="hotspot" data-id="camara" title="Cámara de vigilancia"
+             style="top: 3%; left: 81.5%; width: 13%; height: 19%;"></div>
+
+        <!-- 6. Lámpara industrial colgante -->
+        <div class="hotspot" data-id="lampara" title="Lámpara colgante"
+             style="top: 0%; left: 42%; width: 13%; height: 26%;"></div>
+
+        <!-- 7. Placa dorada 'Mastodonte' en la vitrina -->
+        <div class="hotspot" data-id="placa" title="Placa identificadora"
+             style="top: 74.5%; left: 17%; width: 14%; height: 8%;"></div>
+
+        <!-- 8. Fémur largo prehistórico (estante central) -->
+        <div class="hotspot" data-id="femur" title="Fémur fósil largo"
+             style="top: 25.5%; left: 54%; width: 11%; height: 7.5%;"></div>
+
+        <!-- 9. Cráneo humano (estante superior derecho) -->
+        <div class="hotspot" data-id="craneo-humano" title="Cráneo humano"
+             style="top: 36%; left: 73.5%; width: 6.5%; height: 11%;"></div>
+
+        <!-- 10. Cráneo animal puntiagudo (estante central) -->
+        <div class="hotspot" data-id="craneo-animal" title="Cráneo fósil animal"
+             style="top: 38%; left: 55%; width: 7%; height: 10%;"></div>
+      </div>
+
+      <!-- Tablero de Objetos estilo Criminal Case -->
+      <div class="clues-board">
+        <div class="clues-title">
+          <span>Lista de evidencias a recolectar (10):</span>
+          <span style="font-size: 0.8rem; color: #888;">Haz clic sobre el objeto en la escena</span>
+        </div>
+        <div class="clues-list">
+          <div class="clue-pill" id="item-hueso">🦴 Hueso en Vitrina</div>
+          <div class="clue-pill" id="item-martillo">🔨 Martillo Sospechoso</div>
+          <div class="clue-pill" id="item-sobre">📁 Sobre de Evidencia</div>
+          <div class="clue-pill" id="item-lupa">🔍 Lupa del Detective</div>
+          <div class="clue-pill" id="item-camara">📹 Cámara de Vigilancia</div>
+          <div class="clue-pill" id="item-lampara">💡 Lámpara Colgante</div>
+          <div class="clue-pill" id="item-placa">🏷️ Placa de Mastodonte</div>
+          <div class="clue-pill" id="item-femur">🦴 Fémur Prehistórico</div>
+          <div class="clue-pill" id="item-craneo-humano">💀 Cráneo Humano</div>
+          <div class="clue-pill" id="item-craneo-animal">🦊 Cráneo Fósil Animal</div>
+        </div>
+      </div>
+
+      <!-- Modal de Victoria -->
+      <div id="victory-modal" class="victory-modal">
+        <h2>¡Caso Resuelto al 100%!</h2>
+        <p>¡Increíble trabajo de detective! Has localizado todas las 10 evidencias cruciales en el almacén. El sabueso tiene el caso totalmente cerrado.</p>
+        <button id="btn-restart" class="btn-action">Jugar de Nuevo</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Lista expandida a 10 objetos
+    const clues = [
+      { id: 'hueso', name: 'Hueso en Vitrina', found: false },
+      { id: 'martillo', name: 'Martillo Sospechoso', found: false },
+      { id: 'sobre', name: 'Sobre de Evidencia', found: false },
+      { id: 'lupa', name: 'Lupa del Detective', found: false },
+      { id: 'camara', name: 'Cámara de Vigilancia', found: false },
+      { id: 'lampara', name: 'Lámpara Colgante', found: false },
+      { id: 'placa', name: 'Placa de Mastodonte', found: false },
+      { id: 'femur', name: 'Fémur Prehistórico', found: false },
+      { id: 'craneo-humano', name: 'Cráneo Humano', found: false },
+      { id: 'craneo-animal', name: 'Cráneo Fósil Animal', found: false }
+    ];
+
+    let foundCount = 0;
+    const totalClues = clues.length;
+
+    // Elementos DOM
+    const screenStart = document.getElementById('screen-start');
+    const screenGame = document.getElementById('screen-game');
+    const btnStart = document.getElementById('btn-start');
+    const btnBackMenu = document.getElementById('btn-back-menu');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnHint = document.getElementById('btn-hint');
+    const counterClues = document.getElementById('counter-clues');
+    const totalCluesEl = document.getElementById('total-clues');
+    const crimeScene = document.getElementById('crime-scene');
+    const victoryModal = document.getElementById('victory-modal');
+    const hotspots = document.querySelectorAll('.hotspot');
+
+    totalCluesEl.textContent = totalClues;
+
+    // Pantallas
+    btnStart.addEventListener('click', () => {
+      screenStart.classList.remove('active');
+      screenGame.classList.add('active');
+    });
+
+    btnBackMenu.addEventListener('click', () => {
+      screenGame.classList.remove('active');
+      screenStart.classList.add('active');
+    });
+
+    btnRestart.addEventListener('click', () => {
+      resetGame();
+    });
+
+    // Botón de Pista (Hint)
+    btnHint.addEventListener('click', () => {
+      const remaining = clues.filter(c => !c.found);
+      if (remaining.length === 0) return;
+      const randomClue = remaining[Math.floor(Math.random() * remaining.length)];
+      const spot = document.querySelector(`.hotspot[data-id="${randomClue.id}"]`);
+      if (spot) {
+        spot.classList.remove('hint-highlight');
+        void spot.offsetWidth; // trigger reflow
+        spot.classList.add('hint-highlight');
+        setTimeout(() => spot.classList.remove('hint-highlight'), 4500);
+      }
+    });
+
+    // Manejo de clics en Hotspots
+    hotspots.forEach(spot => {
+      spot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const clueId = spot.getAttribute('data-id');
+        const clueData = clues.find(c => c.id === clueId);
+
+        if (clueData && !clueData.found) {
+          clueData.found = true;
+          foundCount++;
+          counterClues.textContent = foundCount;
+
+          // Marcar en la lista
+          const pill = document.getElementById(`item-${clueId}`);
+          if (pill) pill.classList.add('found');
+
+          // Marcar hotspot como encontrado
+          spot.classList.add('found');
+          spot.classList.remove('hint-highlight');
+
+          // Crear marcador visual de éxito
+          const rect = crimeScene.getBoundingClientRect();
+          const marker = document.createElement('div');
+          marker.className = 'found-marker';
+          
+          const spotRect = spot.getBoundingClientRect();
+          const x = spotRect.left - rect.left + spotRect.width / 2;
+          const y = spotRect.top - rect.top + spotRect.height / 2;
+          
+          marker.style.left = `${x}px`;
+          marker.style.top = `${y}px`;
+          marker.style.width = `${Math.max(spotRect.width, spotRect.height) * 0.9}px`;
+          marker.style.height = marker.style.width;
+          crimeScene.appendChild(marker);
+
+          // Victoria
+          if (foundCount === totalClues) {
+            setTimeout(() => {
+              victoryModal.classList.add('active');
+            }, 600);
+          }
+        }
+      });
+    });
+
+    // Clic fallido
+    crimeScene.addEventListener('click', (e) => {
+      if (e.target.classList.contains('hotspot')) return;
+      
+      const rect = crimeScene.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const wrong = document.createElement('div');
+      wrong.className = 'wrong-click';
+      wrong.style.left = `${x}px`;
+      wrong.style.top = `${y}px`;
+      crimeScene.appendChild(wrong);
+
+      setTimeout(() => wrong.remove(), 500);
+    });
+
+    // Reiniciar
+    function resetGame() {
+      foundCount = 0;
+      counterClues.textContent = '0';
+      clues.forEach(c => c.found = false);
+
+      document.querySelectorAll('.clue-pill').forEach(p => p.classList.remove('found'));
+      document.querySelectorAll('.hotspot').forEach(h => {
+        h.classList.remove('found');
+        h.classList.remove('hint-highlight');
+      });
+      document.querySelectorAll('.found-marker').forEach(m => m.remove());
+
+      victoryModal.classList.remove('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOGMURAI - El Duelo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* --- PANTALLA DE INICIO --- */
+        #menu-screen {
+            background: #000 url('DOGMURAIJUEGO.jpg') center center / cover no-repeat;
+        }
+
+        .menu-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.95));
+            padding: 40px 20px 50px;
+            text-align: center;
+        }
+
+        .instructions {
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #888;
+            border-radius: 12px;
+            padding: 25px 30px;
+            max-width: 550px;
+            margin: 0 auto 30px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.03);
+        }
+
+        .instructions h2 {
+            color: #fff;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .instructions p {
+            color: #ccc;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .instructions .warning {
+            color: #fff;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 0.95em;
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, #555, #222);
+            color: #fff;
+            border: 2px solid #888;
+            padding: 18px 60px;
+            font-size: 1.4em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        .btn-play:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #777, #333);
+            border-color: #aaa;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 45px rgba(255, 255, 255, 0.2); }
+        }
+
+        /* --- PANTALLA DE INSTRUCCIONES --- */
+        #instructions-screen {
+            background: #0a0a0a;
+        }
+
+        .instructions-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 70%);
+        }
+
+        .instructions-center {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* --- PANTALLA DE PELEA --- */
+        #fight-screen {
+            background: #000;
+        }
+
+        .fight-image {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            display: block;
+        }
+
+        .fight-hud {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .fight-hud .status {
+            color: #fff;
+            font-size: 1.6em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(255, 255, 255, 0.2);
+            animation: blink-status 1.5s infinite;
+        }
+
+        @keyframes blink-status {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .fight-hud .timer {
+            color: #aaa;
+            font-size: 1.1em;
+            margin-top: 8px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
+            opacity: 0.7;
+        }
+
+        .space-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .space-hint span {
+            background: rgba(0, 0, 0, 0.7);
+            color: #999;
+            padding: 10px 25px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+
+        /* --- PANTALLA DE DERROTA --- */
+        #lose-screen {
+            background: rgba(0, 0, 0, 0.97);
+        }
+
+        .lose-content {
+            text-align: center;
+            padding: 40px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lose-content .x-mark {
+            font-size: 5em;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        .lose-content h1 {
+            color: #fff;
+            font-size: 3em;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .lose-content .message {
+            color: #aaa;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .lose-content .mock {
+            color: #ccc;
+            font-size: 1.1em;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .lose-content .timer-info {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 25px;
+        }
+
+        .btn-retry {
+            background: linear-gradient(135deg, #444, #222);
+            color: #fff;
+            border: 2px solid #666;
+            padding: 15px 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-retry:hover {
+            background: linear-gradient(135deg, #666, #333);
+            border-color: #aaa;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        /* --- COUNTDOWN OVERLAY --- */
+        .countdown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 20;
+        }
+
+        .countdown-number {
+            font-size: 10em;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 0 0 50px rgba(255, 255, 255, 0.4);
+            animation: countPop 1s ease;
+        }
+
+        @keyframes countPop {
+            0% { transform: scale(2); opacity: 0; }
+            50% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE INICIO -->
+    <div id="menu-screen" class="screen active">
+        <div class="menu-overlay">
+            <button class="btn-play" onclick="showInstructions()">PELEAR</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE INSTRUCCIONES -->
+    <div id="instructions-screen" class="screen">
+        <div class="instructions-bg"></div>
+        <div class="instructions-center">
+            <div class="instructions">
+                <h2>Instrucciones</h2>
+                <p>Espera que tu rival ataque y toca <strong style="color:#fff; font-size:1.2em;">SPACE</strong> para contraatacar.</p>
+                <p class="warning">Si tocas SPACE antes de que ataque... PERDES!</p>
+            </div>
+            <button class="btn-play" onclick="startGame()">ENTENDIDO</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE PELEA -->
+    <div id="fight-screen" class="screen">
+        <img id="fight-img" class="fight-image" src="DOGMURAIPelea.jpg" alt="Pelea">
+        <div class="fight-hud">
+            <div class="status">Espera el ataque...</div>
+            <div class="timer" id="fight-timer"></div>
+        </div>
+        <div class="space-hint">
+            <span>Toca SPACE para contraatacar</span>
+        </div>
+        <div class="countdown-overlay" id="countdown-overlay" style="display:none;">
+            <div class="countdown-number" id="countdown-number">3</div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE DERROTA -->
+    <div id="lose-screen" class="screen">
+        <div class="lose-content">
+            <div class="x-mark">X</div>
+            <h1>PERDISTE</h1>
+            <div class="message" id="lose-message">Tu rival ni siquiera ataco...</div>
+            <div class="mock" id="mock-message"></div>
+            <div class="timer-info" id="timer-info"></div>
+            <button class="btn-retry" onclick="backToMenu()">REINTENTAR</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== SISTEMA DE AUDIO ==========
+        let audioCtx = null;
+        let tensionNodes = [];
+        let tensionPlaying = false;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Sonido de click de boton
+        function playClick() {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        // Beep de cuenta regresiva
+        function playCountdownBeep(pitch) {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(pitch, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.4);
+        }
+
+        // Sonido de "YA!" - mas agudo y largo
+        function playGoSound() {
+            initAudio();
+            // Tono principal
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc1.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.15);
+            gain1.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+            osc1.start(audioCtx.currentTime);
+            osc1.stop(audioCtx.currentTime + 0.5);
+
+            // Segundo tono armonico
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(900, audioCtx.currentTime + 0.05);
+            osc2.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.2);
+            gain2.gain.setValueAtTime(0.15, audioCtx.currentTime + 0.05);
+            gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+            osc2.start(audioCtx.currentTime + 0.05);
+            osc2.stop(audioCtx.currentTime + 0.5);
+        }
+
+        // Musica de tension - drone ambiental (loop)
+        function startTension() {
+            initAudio();
+            stopTension();
+            tensionPlaying = true;
+
+            // Drone grave
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+            gain1.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain1.gain.linearRampToValueAtTime(0.06, audioCtx.currentTime + 2);
+            osc1.start(audioCtx.currentTime);
+
+            // Drone medio con vibrato lento
+            const osc2 = audioCtx.createOscillator();
+            const lfo = audioCtx.createOscillator();
+            const lfoGain = audioCtx.createGain();
+            const gain2 = audioCtx.createGain();
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc2.frequency);
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(110, audioCtx.currentTime);
+            lfo.type = 'sine';
+            lfo.frequency.setValueAtTime(0.5, audioCtx.currentTime);
+            lfoGain.gain.setValueAtTime(3, audioCtx.currentTime);
+            gain2.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain2.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 3);
+            osc2.start(audioCtx.currentTime);
+            lfo.start(audioCtx.currentTime);
+
+            // Ruido blanco muy suave (viento)
+            const bufferSize = audioCtx.sampleRate * 2;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.5;
+            }
+            const noise = audioCtx.createBufferSource();
+            const noiseGain = audioCtx.createGain();
+            const noiseFilter = audioCtx.createBiquadFilter();
+            noise.buffer = noiseBuffer;
+            noise.loop = true;
+            noiseFilter.type = 'lowpass';
+            noiseFilter.frequency.setValueAtTime(400, audioCtx.currentTime);
+            noise.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            noiseGain.gain.setValueAtTime(0, audioCtx.currentTime);
+            noiseGain.gain.linearRampToValueAtTime(0.03, audioCtx.currentTime + 2);
+            noise.start(audioCtx.currentTime);
+
+            // Latido de corazon cada ~1.2s
+            const heartbeatInterval = setInterval(() => {
+                if (!tensionPlaying) { clearInterval(heartbeatInterval); return; }
+                playHeartbeat();
+            }, 1200);
+
+            tensionNodes = [
+                { node: osc1, gain: gain1 },
+                { node: osc2, gain: gain2 },
+                { node: lfo, gain: null },
+                { node: noise, gain: noiseGain }
+            ];
+        }
+
+        // Latido de corazon
+        function playHeartbeat() {
+            if (!audioCtx) return;
+            const t = audioCtx.currentTime;
+            
+            // Primer golpe
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(60, t);
+            osc.frequency.exponentialRampToValueAtTime(30, t + 0.15);
+            gain.gain.setValueAtTime(0.15, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+            osc.start(t);
+            osc.stop(t + 0.2);
+
+            // Segundo golpe (mas suave, poco despues)
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(50, t + 0.25);
+            osc2.frequency.exponentialRampToValueAtTime(25, t + 0.4);
+            gain2.gain.setValueAtTime(0.1, t + 0.25);
+            gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+            osc2.start(t + 0.25);
+            osc2.stop(t + 0.45);
+        }
+
+        function stopTension() {
+            tensionPlaying = false;
+            tensionNodes.forEach(item => {
+                try {
+                    if (item.gain) {
+                        item.gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+                    }
+                    setTimeout(() => { try { item.node.stop(); } catch(e) {} }, 600);
+                } catch(e) {}
+            });
+            tensionNodes = [];
+        }
+
+        // Sonido de derrota - slash de espada + tono grave
+        function playLoseSound() {
+            initAudio();
+            const t = audioCtx.currentTime;
+
+            // Slash / swoosh
+            const bufferSize = audioCtx.sampleRate;
+            const slashBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const slashData = slashBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                slashData[i] = (Math.random() * 2 - 1);
+            }
+            const slash = audioCtx.createBufferSource();
+            const slashGain = audioCtx.createGain();
+            const slashFilter = audioCtx.createBiquadFilter();
+            slash.buffer = slashBuffer;
+            slashFilter.type = 'bandpass';
+            slashFilter.frequency.setValueAtTime(3000, t);
+            slashFilter.frequency.exponentialRampToValueAtTime(200, t + 0.3);
+            slashFilter.Q.setValueAtTime(2, t);
+            slash.connect(slashFilter);
+            slashFilter.connect(slashGain);
+            slashGain.connect(audioCtx.destination);
+            slashGain.gain.setValueAtTime(0.4, t);
+            slashGain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+            slash.start(t);
+
+            // Tono grave de derrota
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, t + 0.1);
+            osc.frequency.exponentialRampToValueAtTime(40, t + 1.2);
+            gain.gain.setValueAtTime(0.25, t + 0.1);
+            gain.gain.linearRampToValueAtTime(0.2, t + 0.3);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
+            osc.start(t + 0.1);
+            osc.stop(t + 1.5);
+
+            // Impacto metalico
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(1800, t);
+            osc2.frequency.exponentialRampToValueAtTime(100, t + 0.15);
+            gain2.gain.setValueAtTime(0.2, t);
+            gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+            osc2.start(t);
+            osc2.stop(t + 0.3);
+        }
+
+        // Sonido sutil de parpadeo
+        function playBlinkSound() {
+            initAudio();
+            const t = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(2500, t);
+            osc.frequency.exponentialRampToValueAtTime(1500, t + 0.05);
+            gain.gain.setValueAtTime(0.05, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+            osc.start(t);
+            osc.stop(t + 0.08);
+        }
+
+        // ========== LOGICA DEL JUEGO ==========
+        let blinkInterval = null;
+        let timerInterval = null;
+        let currentImage = 1;
+        let elapsedSeconds = 0;
+        let gameActive = false;
+
+        const phrases = [
+            "No pudiste esperar ni un poquito?",
+            "La paciencia es una virtud... que no tenes",
+            "Tu rival se estaba preparando el mate todavia",
+            "El rival NI SE MOVIO y vos ya apretaste SPACE",
+            "Tenias cosquillas en el dedo?",
+            "Un samurai de verdad espera... vos no lo sos",
+            "Impaciente! Ni le diste chance a pelear",
+            "Apretaste SPACE o te sentaste en el teclado?",
+            "El dog samurai te mira con decepcion"
+        ];
+
+        function showInstructions() {
+            initAudio();
+            playClick();
+            showScreen('instructions-screen');
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function startGame() {
+            initAudio();
+            playClick();
+            showScreen('fight-screen');
+            
+            // Countdown 3, 2, 1...
+            const overlay = document.getElementById('countdown-overlay');
+            const numEl = document.getElementById('countdown-number');
+            overlay.style.display = 'flex';
+            
+            let count = 3;
+            numEl.textContent = count;
+            playCountdownBeep(330);
+
+            const countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    numEl.textContent = count;
+                    numEl.style.animation = 'none';
+                    void numEl.offsetWidth;
+                    numEl.style.animation = 'countPop 1s ease';
+                    playCountdownBeep(330 + (3 - count) * 110);
+                } else if (count === 0) {
+                    numEl.textContent = "YA!";
+                    numEl.style.color = '#fff';
+                    numEl.style.animation = 'none';
+                    void numEl.offsetWidth;
+                    numEl.style.animation = 'countPop 1s ease';
+                    playGoSound();
+                } else {
+                    clearInterval(countInterval);
+                    overlay.style.display = 'none';
+                    numEl.style.color = '#fff';
+                    beginFight();
+                }
+            }, 1000);
+        }
+
+        function beginFight() {
+            gameActive = true;
+            elapsedSeconds = 0;
+            currentImage = 1;
+            startTension();
+
+            // Parpadeo: cada 15 segundos muestra la imagen 2 por 150ms y vuelve a la 1
+            blinkInterval = setInterval(() => {
+                document.getElementById('fight-img').src = 'DOGMURAIPelea2.jpg';
+                playBlinkSound();
+                setTimeout(() => {
+                    if (gameActive) {
+                        document.getElementById('fight-img').src = 'DOGMURAIPelea.jpg';
+                    }
+                }, 150);
+            }, 15000);
+
+            // Timer para mostrar cuanto aguanto
+            timerInterval = setInterval(() => {
+                elapsedSeconds++;
+                document.getElementById('fight-timer').textContent = 
+                    `Esperando ataque... ${elapsedSeconds}s`;
+            }, 1000);
+
+            // La senal NUNCA llega. El juego es la trampa.
+        }
+
+        function lose() {
+            gameActive = false;
+            clearInterval(blinkInterval);
+            clearInterval(timerInterval);
+            stopTension();
+            playLoseSound();
+
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            
+            document.getElementById('mock-message').textContent = randomPhrase;
+            document.getElementById('timer-info').textContent = 
+                `Aguantaste ${elapsedSeconds} segundo${elapsedSeconds !== 1 ? 's' : ''} antes de caer en la trampa.`;
+            
+            showScreen('lose-screen');
+        }
+
+        function backToMenu() {
+            playClick();
+            showScreen('menu-screen');
+        }
+
+        // Detectar SPACE
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (gameActive) {
+                    lose();
+                }
+            }
+        });
+
+        // Tambien detectar click/touch en la pantalla de pelea (para mobile)
+        document.getElementById('fight-screen').addEventListener('click', () => {
+            if (gameActive) {
+                lose();
+            }
+        });
+
+        document.getElementById('fight-screen').addEventListener('touchstart', (e) => {
+            if (gameActive) {
+                e.preventDefault();
+                lose();
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dog">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reparto — 10 Historias · Festival de Canes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gorditas:wght@700;900&family=Space+Grotesk:wght@400;500;700&display=swap');
+  :root{ --bg:#050a2e; --bg-card:#13131a; --bg-card-2:#1a1a22; --gold:#f7d40e; --text:#fff; --muted:#a9acb8; --dim:#7a7d8a; --border:rgba(255,255,255,.08); --font:'Space Grotesk',sans-serif; --fest:'Gorditas',cursive }
+  [data-theme="human"]{ --bg:#160506; --bg-card:#241214; --text:#fff6e0; --muted:#c9b69a; --gold:#f5d78e; --border:rgba(245,215,142,.15) }
+  *{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth}
+  body{ background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; overflow-x:hidden }
+  a{color:inherit; text-decoration:none}
+  .hbo-nav{ position:sticky; top:0; z-index:50; background:rgba(5,10,46,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:20px }
+  .hbo-nav-left{ display:flex; align-items:center; gap:28px }
+  .hbo-logo{ display:flex; align-items:center; gap:10px; font-family:var(--fest); font-weight:900; font-size:19px; color:var(--gold); letter-spacing:-.02em }
+  .hbo-logo span{ font-family:var(--font); font-weight:700; font-size:10px; letter-spacing:.14em; color:var(--muted); text-transform:uppercase }
+  .hbo-logo-mark{ width:32px; height:32px; border-radius:6px; background:var(--gold); color:#0a0a0a; display:grid; place-items:center; font-family:var(--fest); font-weight:900; font-size:13px; line-height:1 }
+  .hbo-links{ display:flex; gap:22px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase }
+  .hbo-links a{ color:var(--muted); padding:6px 0; border-bottom:2px solid transparent; transition:.2s }
+  .hbo-links a.active, .hbo-links a:hover{ color:var(--text); border-bottom-color:var(--gold) }
+  .hbo-nav-right{ display:flex; align-items:center; gap:12px }
+  .lens{ display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:4px 10px; border-radius:999px }
+  .lens-icon{ width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-size:11px; opacity:.35; transition:.2s }
+  .lens-icon.active{ opacity:1; background:var(--gold); color:#0a0a0a }
+  .lens-track{ width:42px; height:20px; background:#1a1a22; border-radius:999px; position:relative; cursor:pointer; border:1px solid var(--border); padding:0 }
+  .lens-thumb{ position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:var(--gold); transition:transform .25s }
+  [data-theme="human"] .lens-thumb{ transform:translateX(22px) }
+  .hbo-profile{ width:30px; height:30px; border-radius:50%; background:var(--gold); color:#0a0a0a; display:grid; place-items:center; font-weight:800; font-size:11px }
+  .wrap{ max-width:1280px; margin:0 auto; padding:32px 24px 40px }
+  .kicker{ display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--gold) }
+  .kicker::before{ content:""; width:20px; height:2px; background:var(--gold); border-radius:2px }
+  .head h1{ font-size:36px; font-weight:700; letter-spacing:-.02em; line-height:.95; margin-top:10px }
+  .head h1 span{ font-family:var(--fest); color:var(--gold) }
+  .head p{ color:var(--muted); font-size:13px; line-height:1.6; max-width:620px; margin-top:8px }
+  .head-actions{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap }
+  .head-actions a{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:9px 16px; border-radius:999px; border:1px solid var(--border) }
+  .head-actions a.primary{ background:var(--gold); color:#0a0a0a; border-color:var(--gold); font-weight:800 }
+  .head-actions a.ghost{ background:rgba(255,255,255,.04); color:var(--muted) }
+  .head-actions a:hover{ transform:translateY(-1px) }
+  .grid{ display:grid; grid-template-columns: repeat(5,1fr); gap:16px; margin-top:28px }
+  @media(max-width:1100px){ .grid{ grid-template-columns:repeat(3,1fr) } }
+  @media(max-width:700px){ .grid{ grid-template-columns:repeat(2,1fr) } }
+  @media(max-width:480px){ .grid{ grid-template-columns:1fr } .head h1{ font-size:28px } }
+  .card{ background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; transition:border-color .2s, transform .2s }
+  .card:hover{ border-color:rgba(247,212,14,.30); transform:translateY(-3px) }
+  .card img{ width:100%; height:280px; object-fit:cover; display:block; background:#0f0f14 }
+  .card .info{ padding:14px 14px 16px; display:flex; flex-direction:column; gap:4px; flex:1 }
+  .card h3{ font-size:13px; font-weight:700; line-height:1.2 }
+  .card h3 span{ display:block; font-size:10px; letter-spacing:.08em; color:var(--gold); text-transform:uppercase; margin-top:4px; font-weight:700 }
+  .card small{ font-size:11px; color:var(--muted); line-height:1.45; margin-top:2px }
+  .card .tag{ align-self:flex-start; margin-top:8px; font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:5px 8px; border-radius:999px; color:var(--muted) }
+  footer{ max-width:1280px; margin:0 auto; padding:22px 24px; border-top:1px solid var(--border); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:11px; color:var(--muted) }
+  :focus-visible{ outline:2px solid var(--gold); outline-offset:2px }
+</style>
+</head>
+<body>
+<header class="hbo-nav">
+  <div class="hbo-nav-left">
+    <a href="index.html" class="hbo-logo"><div class="hbo-logo-mark">FC</div> CANES <span>EL RITUAL</span></a>
+    <nav class="hbo-links"><a href="index.html#cartelera">Cartelera</a><a href="galeria-actores.html" class="active">Reparto</a><a href="galeria-directores.html">Dirección</a><a href="juegos.html">Juegos</a><a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener">Boleto</a></nav>
+  </div>
+  <div class="hbo-nav-right">
+    <div class="lens" title="Lente visión perro / humana">
+      <button class="lens-icon active" id="iconPaw" aria-label="Visión perro" style="border:none; cursor:pointer; background:var(--gold); color:#0a0a0a">🐾</button>
+      <button class="lens-track" id="themeToggle" aria-label="Cambiar lente"><span class="lens-thumb" id="switchThumb"></span></button>
+      <button class="lens-icon" id="iconHuman" aria-label="Visión humana" style="border:none; cursor:pointer; background:transparent">🧑</button>
+    </div>
+    <div class="hbo-profile" aria-hidden="true">P</div>
+  </div>
+</header>
+<main class="wrap">
+  <div class="head">
+    <div class="kicker">Elenco · 10 historias · HBO Max</div>
+    <h1><span>Reparto</span> — 10 perros que roban cámara</h1>
+    <p>Del pitbull atlético al shih tzu bookish: retratos 1024×1024 con raza pertinente a cada parodia. Mismo universo que viste en el home, ahora en grande para conocer sus historias.</p>
+    <div class="head-actions">
+      <a href="index.html#actores" class="ghost">← Volver al festival</a>
+      <a href="galeria-directores.html" class="primary">Conoce a los directores →</a>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card"><img src="actores/brad-pittbull.png" alt="Brad Pittbull" loading="lazy"><div class="info"><h3>Brad Pittbull <span>Pitbull Americano</span></h3><small>Pitbull dorado y atlético, mirada Ocean's Eleven.</small><span class="tag">Top • Pitbull</span></div></div>
+    <div class="card"><img src="actores/golden-retriever-downey-jr.png" alt="Golden Retriever Downey Jr." loading="lazy"><div class="info"><h3>Golden Retriever Downey Jr. <span>Golden Retriever</span></h3><small>Golden con perilla Stark y collar Iron Paw.</small><span class="tag">Golden</span></div></div>
+    <div class="card"><img src="actores/husky-jackman.png" alt="Husky Jackman" loading="lazy"><div class="info"><h3>Husky Jackman <span>Siberiano</span></h3><small>Husky Wolverine con patillas y garras.</small><span class="tag">Siberiano</span></div></div>
+    <div class="card"><img src="actores/jim-caniche.png" alt="Jim Caniche" loading="lazy"><div class="info"><h3>Jim Caniche <span>Caniche</span></h3><small>Poodle blanco elástico, sonrisa Mask.</small><span class="tag">Caniche</span></div></div>
+    <div class="card"><img src="actores/jennifer-anispug.png" alt="Jennifer AnisPug" loading="lazy"><div class="info"><h3>Jennifer AnisPug <span>Pug</span></h3><small>Pug con Rachel cut, dulzura romcom.</small><span class="tag">Pug</span></div></div>
+    <div class="card"><img src="actores/zendaya-husky.png" alt="Zendaya Husky" loading="lazy"><div class="info"><h3>Zendaya Husky <span>Husky</span></h3><small>Husky fashion, pasarela alfombra azul.</small><span class="tag">Husky</span></div></div>
+    <div class="card"><img src="actores/scarlett-johansspaniel.png" alt="Scarlett JohansSpaniel" loading="lazy"><div class="info"><h3>Scarlett JohansSpaniel <span>Cocker Spaniel</span></h3><small>Cocker rubia glam, Black Widow sutil.</small><span class="tag">Cocker</span></div></div>
+    <div class="card"><img src="actores/arnold-schnauzerenegger.png" alt="Arnold Schnauzerenegger" loading="lazy"><div class="info"><h3>Arnold Schnauzerenegger <span>Schnauzer Gigante</span></h3><small>Schnauzer Terminator, lentes y cuero.</small><span class="tag">Schnauzer</span></div></div>
+    <div class="card"><img src="actores/ricardo-darinpug.png" alt="Ricardo DarínPug" loading="lazy"><div class="info"><h3>Ricardo DarínPug <span>Pug Argentino</span></h3><small>Pug trench coat, noir porteño.</small><span class="tag">Pug</span></div></div>
+    <div class="card"><img src="actores/emma-watshihtzu.png" alt="Emma WatShihTzu" loading="lazy"><div class="info"><h3>Emma WatShihTzu <span>Shih Tzu</span></h3><small>Shih Tzu bookish, túnica y libro.</small><span class="tag">Shih Tzu</span></div></div>
+  </div>
+  <p style="text-align:center; margin-top:24px; font-size:11px; color:var(--muted)">Misma paleta HBO Max · Azul #050a2e · Dorado #f7d40e · Lente 🐾/🧑</p>
+</main>
+<footer><span>© 2126 Festival de Canes — El ritual de la proyección.</span><span><a href="index.html" style="color:var(--gold); text-decoration:underline">Volver al home</a> · <a href="juegos.html" style="color:var(--muted); text-decoration:underline">Sala de juegos</a></span></footer>
+<div class="toast" id="toast" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--gold); color:#0a0a0a; padding:11px 16px; border-radius:999px; font-weight:700; font-size:12px; opacity:0; transition:.3s; z-index:100"></div>
+<script>
+  const html=document.documentElement, t=document.getElementById('themeToggle'), paw=document.getElementById('iconPaw'), hum=document.getElementById('iconHuman');
+  let dog=true; function upd(){ html.setAttribute('data-theme',dog?'dog':'human'); paw.style.opacity=dog?'1':'.35'; paw.style.background=dog?'var(--gold)':'transparent'; paw.style.color=dog?'#0a0a0a':'inherit'; hum.style.opacity=!dog?'1':'.35'; hum.style.background=!dog?'var(--gold)':'transparent'; hum.style.color=!dog?'#0a0a0a':'inherit'; }
+  t.addEventListener('click',()=>{dog=!dog; upd()}); paw.addEventListener('click',()=>{if(!dog){dog=true; upd()}}); hum.addEventListener('click',()=>{if(dog){dog=false; upd()}});
+</script>
+</body>
+</html>

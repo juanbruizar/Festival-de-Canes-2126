@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dog">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dirección — 5 Auteurs · Festival de Canes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gorditas:wght@700;900&family=Space+Grotesk:wght@400;500;700&display=swap');
+  :root{ --bg:#050a2e; --bg-card:#13131a; --gold:#f7d40e; --text:#fff; --muted:#a9acb8; --dim:#7a7d8a; --border:rgba(255,255,255,.08); --font:'Space Grotesk',sans-serif; --fest:'Gorditas',cursive }
+  [data-theme="human"]{ --bg:#160506; --bg-card:#241214; --text:#fff6e0; --muted:#c9b69a; --gold:#f5d78e; --border:rgba(245,215,142,.15) }
+  *{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth}
+  body{ background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; overflow-x:hidden }
+  a{color:inherit; text-decoration:none}
+  .hbo-nav{ position:sticky; top:0; z-index:50; background:rgba(5,10,46,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:20px }
+  .hbo-nav-left{ display:flex; align-items:center; gap:28px }
+  .hbo-logo{ display:flex; align-items:center; gap:10px; font-family:var(--fest); font-weight:900; font-size:19px; color:var(--gold); letter-spacing:-.02em }
+  .hbo-logo span{ font-family:var(--font); font-weight:700; font-size:10px; letter-spacing:.14em; color:var(--muted); text-transform:uppercase }
+  .hbo-logo-mark{ width:32px; height:32px; border-radius:6px; background:var(--gold); color:#0a0a0a; display:grid; place-items:center; font-family:var(--fest); font-weight:900; font-size:13px; line-height:1 }
+  .hbo-links{ display:flex; gap:22px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase }
+  .hbo-links a{ color:var(--muted); padding:6px 0; border-bottom:2px solid transparent; transition:.2s }
+  .hbo-links a.active, .hbo-links a:hover{ color:var(--text); border-bottom-color:var(--gold) }
+  .hbo-nav-right{ display:flex; align-items:center; gap:12px }
+  .lens{ display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:4px 10px; border-radius:999px }
+  .lens-icon{ width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-size:11px; opacity:.35; transition:.2s }
+  .lens-icon.active{ opacity:1; background:var(--gold); color:#0a0a0a }
+  .lens-track{ width:42px; height:20px; background:#1a1a22; border-radius:999px; position:relative; cursor:pointer; border:1px solid var(--border); padding:0 }
+  .lens-thumb{ position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:var(--gold); transition:transform .25s }
+  [data-theme="human"] .lens-thumb{ transform:translateX(22px) }
+  .hbo-profile{ width:30px; height:30px; border-radius:50%; background:var(--gold); color:#0a0a0a; display:grid; place-items:center; font-weight:800; font-size:11px }
+  .wrap{ max-width:1280px; margin:0 auto; padding:32px 24px 40px }
+  .kicker{ display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--gold) }
+  .kicker::before{ content:""; width:20px; height:2px; background:var(--gold); border-radius:2px }
+  .head h1{ font-size:36px; font-weight:700; letter-spacing:-.02em; line-height:.95; margin-top:10px }
+  .head h1 span{ font-family:var(--fest); color:var(--gold) }
+  .head p{ color:var(--muted); font-size:13px; line-height:1.6; max-width:620px; margin-top:8px }
+  .head-actions{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap }
+  .head-actions a{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:9px 16px; border-radius:999px; border:1px solid var(--border) }
+  .head-actions a.primary{ background:var(--gold); color:#0a0a0a; border-color:var(--gold); font-weight:800 }
+  .head-actions a.ghost{ background:rgba(255,255,255,.04); color:var(--muted) }
+  .grid{ display:grid; grid-template-columns: repeat(5,1fr); gap:16px; margin-top:28px }
+  @media(max-width:1100px){ .grid{ grid-template-columns:repeat(3,1fr) } }
+  @media(max-width:700px){ .grid{ grid-template-columns:repeat(2,1fr) } }
+  @media(max-width:480px){ .grid{ grid-template-columns:1fr } .head h1{ font-size:28px } }
+  .card{ background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; transition:border-color .2s, transform .2s }
+  .card:hover{ border-color:rgba(247,212,14,.30); transform:translateY(-3px) }
+  .card img{ width:100%; height:320px; object-fit:cover; display:block; background:#0f0f14 }
+  .card .info{ padding:16px 14px 18px; display:flex; flex-direction:column; gap:6px; flex:1 }
+  .card h3{ font-size:14px; font-weight:700; line-height:1.2 }
+  .card h3 span{ display:block; font-size:10px; letter-spacing:.08em; color:var(--gold); text-transform:uppercase; margin-top:4px; font-weight:700 }
+  .card small{ font-size:11px; color:var(--muted); line-height:1.45 }
+  .card .meta{ margin-top:8px; display:flex; gap:6px; flex-wrap:wrap }
+  .card .meta span{ font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:5px 8px; border-radius:999px; color:var(--muted) }
+  footer{ max-width:1280px; margin:0 auto; padding:22px 24px; border-top:1px solid var(--border); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:11px; color:var(--muted) }
+  :focus-visible{ outline:2px solid var(--gold); outline-offset:2px }
+</style>
+</head>
+<body>
+<header class="hbo-nav">
+  <div class="hbo-nav-left">
+    <a href="index.html" class="hbo-logo"><div class="hbo-logo-mark">FC</div> CANES <span>EL RITUAL</span></a>
+    <nav class="hbo-links"><a href="index.html#cartelera">Cartelera</a><a href="galeria-actores.html">Reparto</a><a href="galeria-directores.html" class="active">Dirección</a><a href="juegos.html">Juegos</a><a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener">Boleto</a></nav>
+  </div>
+  <div class="hbo-nav-right">
+    <div class="lens" title="Lente visión perro / humana">
+      <button class="lens-icon active" id="iconPaw" aria-label="Visión perro" style="border:none; cursor:pointer; background:var(--gold); color:#0a0a0a">🐾</button>
+      <button class="lens-track" id="themeToggle" aria-label="Cambiar lente"><span class="lens-thumb" id="switchThumb"></span></button>
+      <button class="lens-icon" id="iconHuman" aria-label="Visión humana" style="border:none; cursor:pointer; background:transparent">🧑</button>
+    </div>
+    <div class="hbo-profile" aria-hidden="true">P</div>
+  </div>
+</header>
+<main class="wrap">
+  <div class="head">
+    <div class="kicker">Dirección · 5 auteurs · HBO Max</div>
+    <h1><span>Dirección</span> — 5 perros con plano secuencia</h1>
+    <p>Del poeta de la baba al arquitecto del ladrido: 5 retratos de autor con la misma luz de festival que el reparto. Fantástico húmedo, diálogos que muerden y horror con correa.</p>
+    <div class="head-actions">
+      <a href="index.html#directores" class="ghost">← Volver al festival</a>
+      <a href="galeria-actores.html" class="primary">Conoce al reparto →</a>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card"><img src="directores/guillermo-el-perron.png" alt="Guillermo el Perrón" loading="lazy"><div class="info"><h3>Guillermo el Perrón <span>El poeta de la baba</span></h3><small>Mastín barbudo con boina y libro de monstruos. Fantástico húmedo.</small><div class="meta"><span>Laberinto del Can</span><span>Forma del Charco</span></div></div></div>
+    <div class="card"><img src="directores/quentin-terrenpoodle.png" alt="Quentin Terrenpoodle" loading="lazy"><div class="info"><h3>Quentin Terrenpoodle <span>Diálogos que muerden</span></h3><small>Caniche en traje negro, guion + katana Kill Bark.</small><div class="meta"><span>Kill Bark</span><span>Reserva</span></div></div></div>
+    <div class="card"><img src="directores/steven-spielbeagle.png" alt="Steven SpielBeagle" loading="lazy"><div class="info"><h3>Steven SpielBeagle <span>Blockbuster con corazón</span></h3><small>Beagle con gorra, megáfono y dinos Jurassic Bark.</small><div class="meta"><span>Jurassic Bark</span><span>Scent</span></div></div></div>
+    <div class="card"><img src="directores/chihuahua-nolan.png" alt="Chihuahua Nolan" loading="lazy"><div class="info"><h3>Chihuahua Nolan <span>El arquitecto del ladrido</span></h3><small>Chihuahua en traje, tiempo doblado estilo In-Bark-ception.</small><div class="meta"><span>Perronator</span><span>In-Bark-ception</span></div></div></div>
+    <div class="card"><img src="directores/dog-reimi.png" alt="Dog Reimi" loading="lazy"><div class="info"><h3>Dog Reimi <span>Horror con correa</span></h3><small>Terrier maníaco con cámara que gira, zoom Evil Dead.</small><div class="meta"><span>Scent</span><span>Dog-Murai</span></div></div></div>
+  </div>
+  <p style="text-align:center; margin-top:24px; font-size:11px; color:var(--muted)">Misma nav, paleta y tokens que index.html · HBO Max · Lente 🐾/🧑</p>
+</main>
+<footer><span>© 2126 Festival de Canes — El ritual de la proyección.</span><span><a href="index.html" style="color:var(--gold); text-decoration:underline">Volver al home</a> · <a href="juegos.html" style="color:var(--muted); text-decoration:underline">Sala de juegos</a></span></footer>
+<script>
+  const html=document.documentElement, t=document.getElementById('themeToggle'), paw=document.getElementById('iconPaw'), hum=document.getElementById('iconHuman');
+  let dog=true; function upd(){ html.setAttribute('data-theme',dog?'dog':'human'); paw.style.opacity=dog?'1':'.35'; paw.style.background=dog?'var(--gold)':'transparent'; paw.style.color=dog?'#0a0a0a':'inherit'; hum.style.opacity=!dog?'1':'.35'; hum.style.background=!dog?'var(--gold)':'transparent'; hum.style.color=!dog?'#0a0a0a':'inherit'; }
+  t.addEventListener('click',()=>{dog=!dog; upd()}); paw.addEventListener('click',()=>{if(!dog){dog=true; upd()}}); hum.addEventListener('click',()=>{if(dog){dog=false; upd()}});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4564eed8c2712ec',t:'MTc5MTEzOTE1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

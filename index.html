@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dog">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Festival de Canes — Max</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gorditas:wght@700;900&family=Space+Grotesk:wght@400;500;700&display=swap');
+  :root{
+    --bg: #050a2e;
+    --bg-soft: #0a1682;
+    --bg-card: #13131a;
+    --bg-card-2: #1a1a22;
+    --line: #f2cc0f;
+    --gold: #f7d40e;
+    --text: #ffffff;
+    --text-muted: #a9acb8;
+    --text-dim: #7a7d8a;
+    --border: rgba(255,255,255,.08);
+    --font-festival: 'Gorditas', cursive;
+    --font: 'Space Grotesk', sans-serif;
+  }
+  [data-theme="human"]{ --bg:#160506; --bg-card:#241214; --text:#fff6e0; --text-muted:#c9b69a; --gold:#f5d78e; --border:rgba(245,215,142,.15) }
+  *{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth}
+  body{ background:var(--bg); color:var(--text); font-family:var(--font); overflow-x:hidden; -webkit-font-smoothing:antialiased }
+  a{ color:inherit; text-decoration:none }
+  /* NAV — Impeccable: less chrome, sharper hierarchy */
+  .hbo-nav{
+    position:sticky; top:0; z-index:50; background:rgba(5,10,46,0.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;
+    padding:12px 24px; gap:20px;
+  }
+  .hbo-nav-left{ display:flex; align-items:center; gap:28px }
+  .hbo-logo{ display:flex; align-items:center; gap:10px; font-family:var(--font-festival); font-weight:900; font-size:19px; color:var(--gold); letter-spacing:-.02em }
+  .hbo-logo span{ font-family:var(--font); font-weight:700; font-size:10px; letter-spacing:.14em; color:var(--text-muted); text-transform:uppercase }
+  .hbo-logo-mark{ width:32px; height:32px; border-radius:6px; background:var(--gold); color:#0a0a0a; display:grid; place-items:center; font-family:var(--font-festival); font-weight:900; font-size:13px; line-height:1 }
+  .hbo-links{ display:flex; gap:22px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase }
+  .hbo-links a{ color:var(--text-muted); padding:6px 0; border-bottom:2px solid transparent; transition:color .2s, border-color .2s }
+  .hbo-links a.active, .hbo-links a:hover{ color:var(--text); border-bottom-color:var(--gold) }
+  .hbo-nav-right{ display:flex; align-items:center; gap:12px }
+  .lens{ display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:4px 10px; border-radius:999px }
+  .lens-icon{ width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-size:11px; opacity:.35; transition:.2s }
+  .lens-icon.active{ opacity:1; background:var(--gold); color:#0a0a0a }
+  .lens-track{ width:42px; height:20px; background:#1a1a22; border-radius:999px; position:relative; cursor:pointer; border:1px solid var(--border); padding:0 }
+  .lens-thumb{ position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:var(--gold); transition:transform .25s; }
+  [data-theme="human"] .lens-thumb{ transform:translateX(22px) }
+  .hbo-profile{ width:30px; height:30px; border-radius:50%; background:var(--gold); color:#0a0a0a; display:grid; place-items:center; font-weight:800; font-size:11px }
+  /* HERO — Impeccable: one hierarchy, CTA first */
+  .hbo-hero{ position:relative; min-height:560px; overflow:hidden; display:flex; align-items:flex-end; background:#000 }
+  .hbo-hero-bg{ position:absolute; inset:0 }
+  .hbo-hero-bg img{ width:100%; height:100%; object-fit:cover; opacity:.52; filter:brightness(.72) saturate(1.05) }
+  .hbo-hero-bg::after{ content:""; position:absolute; inset:0; background: linear-gradient(90deg, var(--bg) 0%, rgba(5,10,46,0.88) 42%, transparent 72%), linear-gradient(0deg, var(--bg) 0%, transparent 58%); }
+  .hbo-hero-content{ position:relative; z-index:2; max-width:1280px; margin:0 auto; padding:40px 24px 44px; width:100%; display:flex; align-items:flex-end; }
+  .hbo-hero-text{ display:flex; flex-direction:column; gap:11px; max-width:560px }
+  .hero-cta{
+    display:inline-flex; align-items:center; gap:8px; align-self:flex-start;
+    background:var(--gold); color:#0a0a0a; font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+    padding:8px 14px; border-radius:999px; line-height:1; transition:filter .2s, transform .2s;
+  }
+  .hero-cta:hover{ filter:brightness(1.08); transform:translateY(-1px) }
+  .hero-cta small{ font-weight:600; opacity:.7; text-transform:none; letter-spacing:0 }
+  .hero-qr{ display:inline-block; align-self:flex-start; line-height:0 }
+  .hero-qr img{ border-radius:8px; background:white; padding:4px; display:block; object-fit:contain }
+  .hbo-kicker{ display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--gold) }
+  .hbo-kicker::before{ content:""; width:20px; height:2px; background:var(--gold); border-radius:2px }
+  .hbo-hero h1{ font-weight:700; font-size:46px; line-height:.92; text-transform:uppercase; letter-spacing:-.02em }
+  .hbo-hero h1 .festival-word{ font-family:var(--font-festival); color:var(--gold); text-transform:none }
+  .hbo-hero h1 em{ display:block; font-size:12px; letter-spacing:.18em; font-weight:500; opacity:.75; margin-top:8px; font-style:normal; text-transform:uppercase }
+  .hbo-meta{ display:flex; gap:8px; align-items:center; font-size:11px; color:var(--text-muted); flex-wrap:wrap; font-weight:600 }
+  .hbo-meta span{ background:rgba(255,255,255,.08); border:1px solid var(--border); padding:4px 8px; border-radius:4px }
+  .hbo-meta .rating{ background:var(--gold); color:#0a0a0a; border-color:var(--gold); font-weight:800 }
+  .hbo-desc{ font-size:14px; line-height:1.6; color:rgba(255,255,255,.82); max-width:460px }
+  .hbo-actions{ display:flex; gap:10px; margin-top:6px; flex-wrap:wrap }
+  .hbo-play{ background:white; color:#0a0a0a; padding:13px 24px; border-radius:4px; font-weight:800; font-size:13px; letter-spacing:.01em; display:inline-flex; align-items:center; gap:8px; border:none; cursor:pointer; transition:background .2s }
+  .hbo-play:hover{ background:#ececec }
+  .hbo-list{ background:rgba(255,255,255,.10); color:white; padding:13px 20px; border-radius:4px; font-weight:700; font-size:13px; border:1px solid rgba(255,255,255,.14); cursor:pointer; display:inline-flex; align-items:center; gap:8px; backdrop-filter:blur(6px); transition:background .2s }
+  .hbo-list:hover{ background:rgba(255,255,255,.16) }
+  /* WRAP */
+  .hbo-wrap{ max-width:1280px; margin:0 auto; padding:0 0 32px }
+  /* ROW HEADER — Impeccable: clear section jobs */
+  .hbo-row{ padding:28px 0 0 24px }
+  .hbo-row-header{ display:flex; align-items:center; justify-content:space-between; padding-right:24px; margin-bottom:14px; gap:16px }
+  .hbo-row-title{ font-size:16px; font-weight:700; letter-spacing:-.01em; display:flex; align-items:center; gap:10px; line-height:1 }
+  .hbo-row-title::before{ content:""; width:3px; height:16px; background:var(--gold); border-radius:2px; flex-shrink:0 }
+  .hbo-row-title span{ font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); margin-left:2px }
+  .hbo-see{ font-size:11px; font-weight:700; color:var(--text-muted); letter-spacing:.06em; text-transform:uppercase; display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border:1px solid var(--border); border-radius:999px; background:rgba(255,255,255,.04); transition:all .2s }
+  .hbo-see:hover{ color:var(--text); border-color:rgba(247,212,14,.35); background:rgba(247,212,14,.08); transform:translateY(-1px) }
+  /* TRACKS */
+  .hbo-track{ display:flex; gap:12px; overflow-x:auto; padding:2px 24px 14px 0; scroll-snap-type:x proximity; scrollbar-width:none }
+  .hbo-track::-webkit-scrollbar{ display:none }
+  #actores .hbo-track{ gap:22px; padding-top:6px }
+  #directores .hbo-track{ gap:16px; padding-top:6px }
+  /* CARTELERA HBO — vertical full-bleed como categorías Max */
+  .hbo-card{
+    flex:0 0 168px; height:298px; scroll-snap-align:start; border-radius:8px; overflow:hidden; background:#0a0a14; border:1px solid var(--border);
+    position:relative; cursor:pointer; transition:border-color .2s, transform .2s;
+  }
+  .hbo-card:hover{ border-color:rgba(247,212,14,.45); transform:translateY(-2px) }
+  .hbo-card img{ width:100%; height:100%; object-fit:cover; display:block; background:#1a1a22; transition:transform .32s ease }
+  .hbo-card:hover img{ transform:scale(1.04) }
+  .hbo-card::after{ content:""; position:absolute; inset:0; background: linear-gradient(0deg, rgba(5,10,46,0.94) 0%, rgba(5,10,46,0.72) 26%, rgba(5,10,46,0.18) 52%, transparent 70%); pointer-events:none; z-index:1 }
+  .hbo-card .hbo-card-info{ position:absolute; bottom:0; left:0; right:0; z-index:2; padding:18px 10px 14px; display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center }
+  .hbo-card h4{ font-size:11px; font-weight:800; line-height:1.25; text-transform:uppercase; letter-spacing:.04em; text-shadow:0 2px 10px rgba(0,0,0,.7); color:#fff }
+  .hbo-card .hbo-card-meta{ font-size:9px; color:rgba(255,255,255,.78); display:flex; gap:6px; justify-content:center; align-items:center; font-weight:600; letter-spacing:.06em; text-transform:uppercase; flex-wrap:wrap }
+  .hbo-card .hbo-card-meta span{ background:none; border:none; padding:0; font-size:9px; color:rgba(255,255,255,.72) }
+
+  /* PEGADOS HBO — como categorías Max: sin gap, filete divisor */
+  #cartelera .hbo-track{ gap:0; padding:0; background:#000; border-radius:8px; overflow:hidden; border:1px solid var(--border); scroll-padding:0 }
+  #cartelera .hbo-card{ flex:0 0 168px; height:298px; border:none; border-right:1px solid rgba(255,255,255,.12); border-radius:0; transform:none }
+  #cartelera .hbo-card:last-child{ border-right:none }
+  #cartelera .hbo-card:hover{ transform:none; border-color:rgba(255,255,255,.12); filter:brightness(1.06) }
+  #cartelera .hbo-card:hover img{ transform:scale(1.04) }
+  #cartelera .hbo-card::after{ background: linear-gradient(0deg, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.55) 28%, transparent 62%) }
+  .hbo-card .hbo-badge{ position:absolute; top:8px; left:8px; z-index:3; background:rgba(10,10,20,.68); backdrop-filter:blur(6px); color:var(--gold); font-size:8px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; padding:4px 7px; border-radius:999px; border:1px solid rgba(247,212,14,.28) }
+  /* PEOPLE — 3 featured */
+  .hbo-people{ flex:0 0 118px; display:flex; flex-direction:column; align-items:center; gap:9px; text-align:center }
+  .hbo-people img{ width:92px; height:92px; border-radius:50%; object-fit:cover; border:2px solid var(--border); transition:border-color .2s, transform .2s }
+  .hbo-people:hover img{ border-color:var(--gold); transform:scale(1.03) }
+  .hbo-people h4{ font-size:12px; font-weight:700; line-height:1.25 } .hbo-people em{ font-style:normal; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); display:block; margin-top:3px; font-weight:700 }
+  .people-cta{
+    flex:0 0 190px; scroll-snap-align:start; border:1px dashed rgba(247,212,14,.35); border-radius:12px; background:rgba(247,212,14,.06);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:14px; text-align:center; min-height:118px; transition:background .2s, border-color .2s;
+  }
+  .people-cta:hover{ background:rgba(247,212,14,.10); border-color:rgba(247,212,14,.55) }
+  .people-cta strong{ font-size:12px; font-weight:800; line-height:1.2 } .people-cta span{ font-size:10px; color:var(--text-muted); line-height:1.4 }
+  .cta-pill{ display:inline-flex; align-items:center; gap:6px; background:var(--gold); color:#0a0a0a; font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:8px 14px; border-radius:999px }
+  /* DIRECTORES — 2 featured + CTA */
+  .hbo-director{ flex:0 0 310px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:16px; display:flex; gap:14px; align-items:center; transition:border-color .2s, transform .2s }
+  .hbo-director:hover{ border-color:rgba(247,212,14,.30); transform:translateY(-2px) }
+  .hbo-director img{ width:68px; height:68px; border-radius:10px; object-fit:cover; flex-shrink:0; background:#1a1a22 }
+  .hbo-director h4{ font-size:13px; font-weight:800; line-height:1.15 } .hbo-director h4 span{ display:block; font-size:10px; color:var(--gold); letter-spacing:.07em; text-transform:uppercase; margin-top:4px; font-weight:700 }
+  .hbo-director p{ font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.5 }
+  /* JUEGOS PORTAL — replaces 4 iframes */
+  .hbo-portal{
+    margin-right:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:18px;
+    display:grid; grid-template-columns: 1fr auto; gap:18px; align-items:center; position:relative; overflow:hidden;
+  }
+  .hbo-portal::before{ content:""; position:absolute; inset:0; background: radial-gradient(500px 220px at 75% 50%, rgba(247,212,14,0.07), transparent 60%); pointer-events:none }
+  .hbo-portal-copy h3{ font-size:15px; font-weight:800; letter-spacing:-.01em } .hbo-portal-copy h3 span{ color:var(--gold) }
+  .hbo-portal-copy p{ font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.5; max-width:520px }
+  .hbo-portal-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px }
+  .hbo-portal-tags span{ font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:6px 10px; border-radius:999px; color:var(--text-muted) }
+  .hbo-portal-actions{ display:flex; flex-direction:column; gap:10px; align-items:stretch; position:relative; z-index:1 }
+  .hbo-portal-actions a.primary{ background:var(--gold); color:#0a0a0a; padding:13px 22px; border-radius:999px; font-weight:800; font-size:12px; letter-spacing:.04em; text-transform:uppercase; text-align:center; white-space:nowrap }
+  .hbo-portal-actions a.ghost{ text-align:center; font-size:11px; font-weight:700; color:var(--text-muted); letter-spacing:.04em; text-transform:uppercase }
+  .hbo-portal-actions a.ghost:hover{ color:var(--text) }
+  /* BANNER ENCUESTA */
+  .hbo-banner{ margin:28px 24px 0; background: var(--bg-card); border:1px solid rgba(247,212,14,.20); border-radius:12px; padding:18px; display:grid; grid-template-columns: 160px 1fr auto; gap:20px; align-items:center; position:relative; overflow:hidden }
+  .hbo-banner::before{ content:""; position:absolute; inset:0; background: radial-gradient(600px 280px at 70% 50%, rgba(247,212,14,0.07), transparent 62%); pointer-events:none }
+  .hbo-banner img{ width:150px; height:150px; object-fit:contain; background:white; border-radius:10px; padding:8px; position:relative; z-index:1 }
+  .hbo-banner h3{ font-size:15px; font-weight:800; position:relative; z-index:1 } .hbo-banner p{ font-size:12px; color:var(--text-muted); margin-top:5px; line-height:1.5; position:relative; z-index:1 }
+  .hbo-banner a{ background:var(--gold); color:#0a0a0a; padding:11px 18px; border-radius:999px; font-weight:800; font-size:11px; letter-spacing:.04em; text-transform:uppercase; position:relative; z-index:1; white-space:nowrap; text-align:center }
+  .mono{ font-family:ui-monospace, monospace; font-size:10px; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:6px 10px; border-radius:6px; margin-top:8px; word-break:break-all; color:var(--text-muted); position:relative; z-index:1 }
+  @media(max-width: 980px){
+    .hbo-hero-content{ padding:28px 16px 32px }
+.hbo-hero{ min-height:480px } .hbo-links{ display:none }
+    .hbo-banner{ grid-template-columns:1fr; text-align:center } .hbo-banner img{ margin:0 auto }
+    .hbo-portal{ grid-template-columns:1fr; margin-right:16px }
+    .hbo-director{ flex:0 0 240px }
+  }
+  @media(max-width: 640px){ .hbo-nav{ padding:10px 16px } .hbo-row{ padding-left:16px } .hbo-row-header{ padding-right:16px } .hbo-banner{ margin:24px 16px 0 } }
+  .toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--gold); color:#0a0a0a; padding:11px 16px; border-radius:999px; font-weight:700; font-size:12px; opacity:0; transition:.3s; z-index:100 }
+  .toast.show{ transform:translateX(-50%) translateY(0); opacity:1 }
+  :focus-visible{ outline:2px solid var(--gold); outline-offset:2px }
+</style>
+</head>
+<body>
+<header class="hbo-nav">
+  <div class="hbo-nav-left">
+    <a href="#" class="hbo-logo"><div class="hbo-logo-mark">FC</div> CANES <span></span></a>
+    <nav class="hbo-links"><a href="#cartelera" class="active">Cartelera</a><a href="#actores">Reparto</a><a href="#directores">Dirección</a><a href="#juegos">Juegos</a><a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener">Encuesta</a></nav>
+  </div>
+  <div class="hbo-nav-right">
+    <div class="lens" title="Lente visión perro / humana">
+      <button class="lens-icon active" id="iconPaw" aria-label="Visión perro" style="border:none; cursor:pointer; background:var(--gold); color:#0a0a0a">🐾</button>
+      <button class="lens-track" id="themeToggle" aria-label="Cambiar lente"><span class="lens-thumb" id="switchThumb"></span></button>
+      <button class="lens-icon" id="iconHuman" aria-label="Visión humana" style="border:none; cursor:pointer; background:transparent">🧑</button>
+    </div>
+    <div class="hbo-profile" aria-hidden="true">P</div>
+  </div>
+</header>
+
+<section class="hbo-hero">
+  <div class="hbo-hero-bg"><img src="imagenes/amores perros.png" alt="" fetchpriority="high"></div>
+  <div class="hbo-hero-content">
+    <div class="hbo-hero-text">
+      <a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener" class="hero-qr" aria-label="Abrir encuesta QR">
+        <img src="imagenes/Untitled_1.jpg" alt="QR encuesta" loading="eager" style="width: 120px; height: 120px; object-fit: contain;">
+      </a>
+      <a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener" class="hero-cta">🎟️ Entrá a la encuesta y votá la Palma de Hueso de Oro <small>→ 2 min</small></a>
+      <div class="hbo-kicker">★ Gala de apertura · Selección oficial</div>
+      <h1><span class="festival-word">Amores</span> Perros <em></em></h1>
+      <div class="hbo-meta"><span class="rating">⭐ 9.1</span><span>2126 · 108′</span><span>RomCom</span><span>+13</span></div>
+      <p class="hbo-desc">Dos perros callejeros y sus humanos se enamoran al atardecer. La función que abre la Alfombra Azul — donde el amor se huele.</p>
+      <div class="hbo-actions"><a href="https://www.youtube.com/shorts/g4nZquCJVGE" target="_blank" class="hbo-play" rel="noopener">▶ Ver trailer</a><button class="hbo-list" onclick="toast('Guardada en tu lista 🦴')">+ Mi lista</button></div>
+    </div>
+  </div>
+</section>
+
+<div class="hbo-wrap">
+
+  <!-- CARTELERA -->
+  <section class="hbo-row" id="cartelera">
+    <div class="hbo-row-header"><h2 class="hbo-row-title">Cartelera oficial <span>8 films</span></h2><a href="index-cine.html#cartelera" class="hbo-see">Ver grilla completa →</a></div>
+        <div class="hbo-track">
+      <article class="hbo-card"><span class="hbo-badge">TOP 1</span><img loading="lazy" src="imagenes/amores perros.png" alt="Amores Perros"><div class="hbo-card-info"><h4>Amores Perros</h4><div class="hbo-card-meta"><span>⭐ 9.1</span><span>108′</span></div></div></article>
+      <article class="hbo-card"><img loading="lazy" src="imagenes/perronator.png" alt="El Perronator"><div class="hbo-card-info"><h4>El Perronator</h4><div class="hbo-card-meta"><span>⭐ 8.9</span><span>112′</span></div></div></article>
+      <article class="hbo-card"><img loading="lazy" src="imagenes/Canis mundana.png" alt="Canis Mundana"><div class="hbo-card-info"><h4>Canis Mundana</h4><div class="hbo-card-meta"><span>⭐ 8.5</span><span>89′</span></div></div></article>
+      <article class="hbo-card"><img loading="lazy" src="imagenes/pitbull.png" alt="Pitbull"><div class="hbo-card-info"><h4>Pitbull: el último…</h4><div class="hbo-card-meta"><span>⭐ 9.0</span><span>102′</span></div></div></article>
+      <article class="hbo-card"><img loading="lazy" src="imagenes/Huellas del mal.jpg" alt="Huellas del mal"><div class="hbo-card-info"><h4>Huellas del mal</h4><div class="hbo-card-meta"><span>⭐ 8.9</span><span>107′</span></div></div></article>
+      <article class="hbo-card"><img loading="lazy" src="imagenes/dog-murai.png" alt="Dog-Murai"><div class="hbo-card-info"><h4>Dog-Murai</h4><div class="hbo-card-meta"><span>⭐ 9.2</span><span>98′</span></div></div></article>
+      <article class="hbo-card"><img loading="lazy" src="imagenes/100años.png" alt="100 años del collar al hablar"><div class="hbo-card-info"><h4>100 años del collar al hablar</h4><div class="hbo-card-meta"><span>⭐ 8.6</span><span>95′</span> <span>DOCU</span></div></div></article>
+      <article class="hbo-card"><img loading="lazy" src="imagenes/invisiblepng.png" alt="La piedra invisible"><div class="hbo-card-info"><h4>La piedra invisible</h4><div class="hbo-card-meta"><span>⭐ 8.3</span><span>104′</span> <span>TERROR</span></div></div></article>
+    </div>
+  </section>
+
+  <!-- REPARTO — solo 3 + CTA Impeccable: progressive disclosure -->
+    <section class="hbo-row" id="actores">
+    <div class="hbo-row-header"><h2 class="hbo-row-title">Reparto <span>10 historias</span></h2><a href="galeria-actores.html" class="hbo-see">Conoce sus historias →</a></div>
+    <div class="hbo-track" style="align-items:flex-start">
+      <div class="hbo-people"><img src="imagenes/brad-pittbull.png" alt="Brad Pittbull"><h4>Brad Pittbull<em>Pitbull</em></h4></div>
+      <div class="hbo-people"><img src="imagenes/golden-retriever-downey-jr.png" alt="Golden Retriever Downey Jr."><h4>Golden Downey Jr.<em>Golden</em></h4></div>
+      <div class="hbo-people"><img src="imagenes/husky-jackman.png" alt="Husky Jackman"><h4>Husky Jackman<em>Siberiano</em></h4></div>
+      <div class="hbo-people"><img src="imagenes/jim-caniche.png" alt="Jim Caniche"><h4>Jim Caniche<em>Caniche</em></h4></div>
+      <div class="hbo-people"><img src="imagenes/jennifer-anispug.png" alt="Jennifer AnisPug"><h4>Jennifer AnisPug<em>Pug</em></h4></div>
+      <div class="hbo-people"><img src="imagenes/zendaya-husky.png" alt="Zendaya Husky"><h4>Zendaya Husky<em>Husky</em></h4></div>
+      <div class="hbo-people"><img src="imagenes/scarlett-johansspaniel.png" alt="Scarlett JohansSpaniel"><h4>Scarlett JohansSpaniel<em>Cocker</em></h4></div>
+      <div class="hbo-people"><img src="imagenes/arnold-schnauzerenegger.png" alt="Arnold Schnauzerenegger"><h4>Arnold Schnauzer<em>Schnauzer</em></h4></div>
+      <div class="hbo-people"><img src="imagenes/ricardo-darinpug.png" alt="Ricardo DarínPug"><h4>Ricardo DarínPug<em>Pug</em></h4></div>
+      <div class="hbo-people"><img src="imagenes/emma-watshihtzu.png" alt="Emma WatShihTzu"><h4>Emma WatShihTzu<em>Shih Tzu</em></h4></div>
+    </div>
+  </section>
+
+  <!-- DIRECCIÓN — 2 + CTA -->
+    <section class="hbo-row" id="directores">
+    <div class="hbo-row-header"><h2 class="hbo-row-title">Dirección <span>5 auteurs</span></h2><a href="galeria-directores.html" class="hbo-see">Conoce sus historias →</a></div>
+    <div class="hbo-track">
+      <div class="hbo-director"><img src="imagenes/guillermo-el-perron.png" alt="Guillermo el Perrón"><div><h4>Guillermo el Perrón<span>El poeta de la baba</span></h4><p>Laberinto del Can → La Forma del Charco. Fantástico húmedo.</p></div></div>
+      <div class="hbo-director"><img src="imagenes/quentin-terrenpoodle.png" alt="Quentin Terrenpoodle"><div><h4>Quentin Terrenpoodle<span>Diálogos que muerden</span></h4><p>Kill Bark • Perros de Reserva</p></div></div>
+      <div class="hbo-director"><img src="imagenes/steven-spielbeagle.png" alt="Steven SpielBeagle"><div><h4>Steven SpielBeagle<span>Blockbuster con corazón</span></h4><p>Jurassic Bark • Scent</p></div></div>
+      <div class="hbo-director"><img src="imagenes/chihuahua-nolan.png" alt="Chihuahua Nolan"><div><h4>Chihuahua Nolan<span>Arquitecto del ladrido</span></h4><p>Perronator • In-Bark-ception</p></div></div>
+      <div class="hbo-director"><img src="imagenes/dog-reimi.png" alt="Dog Reimi"><div><h4>Dog Reimi<span>Horror con correa</span></h4><p>Scent · Dog-Murai. Zoom maníaco, horror físico.</p></div></div>
+    </div>
+  </section>
+
+  <!-- JUEGOS — ahora portal a página propia (Impeccable: separate jobs) -->
+  <section class="hbo-row" id="juegos">
+    <div class="hbo-row-header"><h2 class="hbo-row-title">Intermedio</h2></div>
+    <div style="text-align:center; padding:10px 24px 8px 0">
+      <p style="font-size:14px; line-height:1.6; color:var(--text); max-width:520px; margin:0 auto; font-weight:500">expande tu horizonte cinematograficos con estos videojuegos que están bien perros</p>
+      <a href="juegos.html" style="display:inline-flex; align-items:center; gap:8px; margin-top:16px; background:var(--gold); color:#0a0a0a; padding:12px 22px; border-radius:999px; font-weight:800; font-size:12px; letter-spacing:.04em; text-transform:uppercase">Ir a los juegos →</a>
+    </div>
+  </section>
+
+</div>
+
+<footer style="max-width:1280px; margin:0 auto; padding:24px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:11px; color:var(--text-muted)"><span>© 2126 Festival de Canes</span><span><a href="juegos.html" style="color:var(--gold); text-decoration:underline"></a> <a href="galeria-actores.html" style="color:var(--text-muted); text-decoration:underline"></a></span></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+  const html=document.documentElement, t=document.getElementById('themeToggle'), paw=document.getElementById('iconPaw'), hum=document.getElementById('iconHuman');
+  let dog=true;
+  function upd(){
+    html.setAttribute('data-theme', dog?'dog':'human');
+    paw.style.opacity=dog?'1':'.35'; paw.style.background=dog?'var(--gold)':'transparent'; paw.style.color=dog?'#0a0a0a':'inherit';
+    hum.style.opacity=!dog?'1':'.35'; hum.style.background=!dog?'var(--gold)':'transparent'; hum.style.color=!dog?'#0a0a0a':'inherit';
+  }
+  t.addEventListener('click',()=>{ dog=!dog; upd(); });
+  paw.addEventListener('click',()=>{ if(!dog){dog=true; upd();}});
+  hum.addEventListener('click',()=>{ if(dog){dog=false; upd();}});
+  function toast(m){ const to=document.getElementById('toast'); to.textContent=m; to.classList.add('show'); setTimeout(()=>to.classList.remove('show'),2200) }
+</script>
+</body>
+</html>
