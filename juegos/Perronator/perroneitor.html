@@ -35,6 +35,9 @@ html, body { height: 100%; overflow: hidden; }
   cursor: crosshair; /* la mira para apuntar */
   font-family: var(--fuente);
   user-select: none;
+  -webkit-user-select: none;     /* iOS: no seleccionar al mantener apretado */
+  -webkit-touch-callout: none;   /* iOS: no menú contextual al mantener apretado */
+  touch-action: manipulation;    /* móvil: tap inmediato, sin zoom por doble toque */
   overflow: hidden;
 }
 
@@ -553,7 +556,9 @@ document.getElementById("btn-jugar").addEventListener("click", empezar);
 document.getElementById("btn-reiniciar").addEventListener("click", empezar);
 document.getElementById("btn-reintentar").addEventListener("click", empezar);
 document.getElementById("btn-infinito").addEventListener("click", continuarInfinito);
-juego.addEventListener("mousedown", disparar);
+/* pointerdown responde al instante a dedo (touch), mouse y lápiz;
+   mousedown tenía demora en varios móviles */
+juego.addEventListener("pointerdown", disparar);
 
 requestAnimationFrame(bucle);
 </script>

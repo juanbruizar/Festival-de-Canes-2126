@@ -21,7 +21,7 @@
     --font: 'Space Grotesk', sans-serif;
   }
   [data-theme="human"]{ --bg:#160506; --bg-card:#241214; --text:#fff6e0; --text-muted:#c9b69a; --gold:#f5d78e; --border:rgba(245,215,142,.15) }
-  *{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth}
+  *{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth; -webkit-text-size-adjust:100%}
   body{ background:var(--bg); color:var(--text); font-family:var(--font); overflow-x:hidden; -webkit-font-smoothing:antialiased }
   a{ color:inherit; text-decoration:none }
   /* NAV — Impeccable: less chrome, sharper hierarchy */
@@ -63,7 +63,7 @@
   .hero-qr img{ border-radius:8px; background:white; padding:4px; display:block; object-fit:contain }
   .hbo-kicker{ display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--gold) }
   .hbo-kicker::before{ content:""; width:20px; height:2px; background:var(--gold); border-radius:2px }
-  .hbo-hero h1{ font-weight:700; font-size:46px; line-height:.92; text-transform:uppercase; letter-spacing:-.02em }
+  .hbo-hero h1{ font-weight:700; font-size:clamp(31px, 8vw, 46px); line-height:.92; text-transform:uppercase; letter-spacing:-.02em }
   .hbo-hero h1 .festival-word{ font-family:var(--font-festival); color:var(--gold); text-transform:none }
   .hbo-hero h1 em{ display:block; font-size:12px; letter-spacing:.18em; font-weight:500; opacity:.75; margin-top:8px; font-style:normal; text-transform:uppercase }
   .hbo-meta{ display:flex; gap:8px; align-items:center; font-size:11px; color:var(--text-muted); flex-wrap:wrap; font-weight:600 }
@@ -105,7 +105,7 @@
   .hbo-card .hbo-card-meta span{ background:none; border:none; padding:0; font-size:9px; color:rgba(255,255,255,.72) }
 
   /* PEGADOS HBO — como categorías Max: sin gap, filete divisor */
-  #cartelera .hbo-track{ gap:0; padding:0; background:#000; border-radius:8px; overflow:hidden; border:1px solid var(--border); scroll-padding:0 }
+  #cartelera .hbo-track{ gap:0; padding:0; background:#000; border-radius:8px; overflow-x:auto; overflow-y:hidden; border:1px solid var(--border); scroll-padding:0 }
   #cartelera .hbo-card{ flex:0 0 168px; height:298px; border:none; border-right:1px solid rgba(255,255,255,.12); border-radius:0; transform:none }
   #cartelera .hbo-card:last-child{ border-right:none }
   #cartelera .hbo-card:hover{ transform:none; border-color:rgba(255,255,255,.12); filter:brightness(1.06) }
@@ -151,14 +151,47 @@
   .hbo-banner h3{ font-size:15px; font-weight:800; position:relative; z-index:1 } .hbo-banner p{ font-size:12px; color:var(--text-muted); margin-top:5px; line-height:1.5; position:relative; z-index:1 }
   .hbo-banner a{ background:var(--gold); color:#0a0a0a; padding:11px 18px; border-radius:999px; font-weight:800; font-size:11px; letter-spacing:.04em; text-transform:uppercase; position:relative; z-index:1; white-space:nowrap; text-align:center }
   .mono{ font-family:ui-monospace, monospace; font-size:10px; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:6px 10px; border-radius:6px; margin-top:8px; word-break:break-all; color:var(--text-muted); position:relative; z-index:1 }
+  /* ===== MOBILE — menú hamburguesa + ajustes táctiles ===== */
+  .nav-burger{ display:none; width:42px; height:42px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.06); color:var(--text); font-size:17px; line-height:1; cursor:pointer; place-items:center; flex-shrink:0 }
+  @media(max-width: 980px){
+    .hbo-links{
+      display:none; position:absolute; top:100%; left:0; right:0; z-index:60;
+      flex-direction:column; gap:2px; padding:8px 20px 14px;
+      background:rgba(5,10,46,.98); backdrop-filter:blur(14px); border-bottom:1px solid var(--border);
+      box-shadow:0 18px 30px rgba(0,0,0,.35);
+    }
+    .hbo-links.open{ display:flex }
+    .hbo-links a{ padding:13px 0; font-size:13px; border-bottom:1px solid var(--border) }
+    .hbo-links a:last-child{ border-bottom:none }
+    .nav-burger{ display:grid }
+  }
+  @media(max-width: 640px){
+    .hbo-nav{ padding:10px 16px }
+    .hbo-profile{ display:none }
+    .lens{ padding:6px 12px; gap:10px }
+    .lens-icon{ width:28px; height:28px; font-size:14px }
+    .lens-track{ width:50px; height:26px }
+    .lens-thumb{ width:18px; height:18px; top:3px; left:3px }
+    [data-theme="human"] .lens-thumb{ transform:translateX(26px) }
+  }
   @media(max-width: 980px){
     .hbo-hero-content{ padding:28px 16px 32px }
-.hbo-hero{ min-height:480px } .hbo-links{ display:none }
+    .hbo-hero{ min-height:480px }
     .hbo-banner{ grid-template-columns:1fr; text-align:center } .hbo-banner img{ margin:0 auto }
     .hbo-portal{ grid-template-columns:1fr; margin-right:16px }
-    .hbo-director{ flex:0 0 240px }
+    .hbo-director{ flex:0 0 250px }
   }
-  @media(max-width: 640px){ .hbo-nav{ padding:10px 16px } .hbo-row{ padding-left:16px } .hbo-row-header{ padding-right:16px } .hbo-banner{ margin:24px 16px 0 } }
+  @media(max-width: 640px){
+    .hbo-row{ padding-left:16px } .hbo-row-header{ padding-right:16px }
+    .hbo-banner{ margin:24px 16px 0 }
+    .hbo-see{ padding:10px 16px }
+    .hbo-card{ flex:0 0 152px; height:268px }
+    #cartelera .hbo-card{ flex-basis:152px; height:268px }
+    .hbo-people{ flex-basis:104px } .hbo-people img{ width:74px; height:74px }
+    .hbo-director img{ width:56px; height:56px }
+    .hbo-play,.hbo-list{ padding:14px 22px; font-size:14px }
+    .hero-cta{ padding:11px 16px; font-size:12px }
+  }
   .toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--gold); color:#0a0a0a; padding:11px 16px; border-radius:999px; font-weight:700; font-size:12px; opacity:0; transition:.3s; z-index:100 }
   .toast.show{ transform:translateX(-50%) translateY(0); opacity:1 }
   :focus-visible{ outline:2px solid var(--gold); outline-offset:2px }
@@ -168,7 +201,7 @@
 <header class="hbo-nav">
   <div class="hbo-nav-left">
     <a href="#" class="hbo-logo"><div class="hbo-logo-mark">FC</div> CANES <span></span></a>
-    <nav class="hbo-links"><a href="#cartelera" class="active">Cartelera</a><a href="#actores">Reparto</a><a href="#directores">Dirección</a><a href="#juegos">Juegos</a><a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener">Encuesta</a></nav>
+    <nav class="hbo-links" id="navLinks"><a href="#cartelera" class="active">Cartelera</a><a href="#actores">Reparto</a><a href="#directores">Dirección</a><a href="#juegos">Juegos</a><a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener">Encuesta</a></nav>
   </div>
   <div class="hbo-nav-right">
     <div class="lens" title="Lente visión perro / humana">
@@ -177,6 +210,7 @@
       <button class="lens-icon" id="iconHuman" aria-label="Visión humana" style="border:none; cursor:pointer; background:transparent">🧑</button>
     </div>
     <div class="hbo-profile" aria-hidden="true">P</div>
+    <button class="nav-burger" id="navBurger" aria-label="Abrir menú" aria-expanded="false">☰</button>
   </div>
 </header>
 
@@ -185,7 +219,7 @@
   <div class="hbo-hero-content">
     <div class="hbo-hero-text">
       <a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener" class="hero-qr" aria-label="Abrir encuesta QR">
-        <img src="imagenes/Untitled_1.jpg" alt="QR encuesta" loading="eager" style="width: 160px; height: 160px; object-fit: contain;">
+        <img src="imagenes/Untitled_1.jpg" alt="QR encuesta" loading="eager" style="width:min(160px, 44vw); height:min(160px, 44vw); object-fit:contain;">
       </a>
       <a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener" class="hero-cta">🎟️ Entrá a la encuesta y votá la Palma de Hueso de Oro <small>→ 2 min</small></a>
       <div class="hbo-kicker">★ Gala de apertura · Selección oficial</div>
@@ -268,6 +302,16 @@
   paw.addEventListener('click',()=>{ if(!dog){dog=true; upd();}});
   hum.addEventListener('click',()=>{ if(dog){dog=false; upd();}});
   function toast(m){ const to=document.getElementById('toast'); to.textContent=m; to.classList.add('show'); setTimeout(()=>to.classList.remove('show'),2200) }
+  /* Menú hamburguesa (mobile) */
+  (function(){
+    var burger=document.getElementById('navBurger'), links=document.getElementById('navLinks');
+    if(!burger) return;
+    burger.addEventListener('click', function(){
+      var open=links.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open?'true':'false');
+      burger.textContent=open?'✕':'☰';
+    });
+  })();
 </script>
 </body>
 </html>

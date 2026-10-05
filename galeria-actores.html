@@ -8,7 +8,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Gorditas:wght@700;900&family=Space+Grotesk:wght@400;500;700&display=swap');
   :root{ --bg:#050a2e; --bg-card:#13131a; --bg-card-2:#1a1a22; --gold:#f7d40e; --text:#fff; --muted:#a9acb8; --dim:#7a7d8a; --border:rgba(255,255,255,.08); --font:'Space Grotesk',sans-serif; --fest:'Gorditas',cursive }
   [data-theme="human"]{ --bg:#160506; --bg-card:#241214; --text:#fff6e0; --muted:#c9b69a; --gold:#f5d78e; --border:rgba(245,215,142,.15) }
-  *{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth}
+  *{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth; -webkit-text-size-adjust:100%}
   body{ background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; overflow-x:hidden }
   a{color:inherit; text-decoration:none}
   .hbo-nav{ position:sticky; top:0; z-index:50; background:rgba(5,10,46,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:20px }
@@ -30,7 +30,7 @@
   .wrap{ max-width:1280px; margin:0 auto; padding:32px 24px 40px }
   .kicker{ display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--gold) }
   .kicker::before{ content:""; width:20px; height:2px; background:var(--gold); border-radius:2px }
-  .head h1{ font-size:36px; font-weight:700; letter-spacing:-.02em; line-height:.95; margin-top:10px }
+  .head h1{ font-size:clamp(26px, 7vw, 36px); font-weight:700; letter-spacing:-.02em; line-height:.95; margin-top:10px }
   .head h1 span{ font-family:var(--fest); color:var(--gold) }
   .head p{ color:var(--muted); font-size:13px; line-height:1.6; max-width:620px; margin-top:8px }
   .head-actions{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap }
@@ -38,10 +38,8 @@
   .head-actions a.primary{ background:var(--gold); color:#0a0a0a; border-color:var(--gold); font-weight:800 }
   .head-actions a.ghost{ background:rgba(255,255,255,.04); color:var(--muted) }
   .head-actions a:hover{ transform:translateY(-1px) }
-  .grid{ display:grid; grid-template-columns: repeat(5,1fr); gap:16px; margin-top:28px }
-  @media(max-width:1100px){ .grid{ grid-template-columns:repeat(3,1fr) } }
-  @media(max-width:700px){ .grid{ grid-template-columns:repeat(2,1fr) } }
-  @media(max-width:480px){ .grid{ grid-template-columns:1fr } .head h1{ font-size:28px } }
+  /* Grid fluido: se adapta solo de 1 a 5 columnas según el ancho (mobile first) */
+  .grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap:16px; margin-top:28px }
   .card{ background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; transition:border-color .2s, transform .2s }
   .card:hover{ border-color:rgba(247,212,14,.30); transform:translateY(-3px) }
   .card img{ width:100%; height:280px; object-fit:cover; display:block; background:#0f0f14 }
@@ -51,6 +49,34 @@
   .card small{ font-size:11px; color:var(--muted); line-height:1.45; margin-top:2px }
   .card .tag{ align-self:flex-start; margin-top:8px; font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:5px 8px; border-radius:999px; color:var(--muted) }
   footer{ max-width:1280px; margin:0 auto; padding:22px 24px; border-top:1px solid var(--border); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:11px; color:var(--muted) }
+  /* ===== MOBILE — menú hamburguesa + ajustes táctiles ===== */
+  .nav-burger{ display:none; width:42px; height:42px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.06); color:var(--text); font-size:17px; line-height:1; cursor:pointer; place-items:center; flex-shrink:0 }
+  @media(max-width: 980px){
+    .hbo-links{
+      display:none; position:absolute; top:100%; left:0; right:0; z-index:60;
+      flex-direction:column; gap:2px; padding:8px 20px 14px;
+      background:rgba(5,10,46,.98); backdrop-filter:blur(14px); border-bottom:1px solid var(--border);
+      box-shadow:0 18px 30px rgba(0,0,0,.35);
+    }
+    .hbo-links.open{ display:flex }
+    .hbo-links a{ padding:13px 0; font-size:13px; border-bottom:1px solid var(--border) }
+    .hbo-links a:last-child{ border-bottom:none }
+    .nav-burger{ display:grid }
+  }
+  @media(max-width: 640px){
+    .hbo-nav{ padding:10px 16px }
+    .hbo-profile{ display:none }
+    .lens{ padding:6px 12px; gap:10px }
+    .lens-icon{ width:28px; height:28px; font-size:14px }
+    .lens-track{ width:50px; height:26px }
+    .lens-thumb{ width:18px; height:18px; top:3px; left:3px }
+    [data-theme="human"] .lens-thumb{ transform:translateX(26px) }
+  }
+  @media(max-width: 640px){
+    .wrap{ padding:24px 16px 32px }
+    .head-actions a{ padding:12px 18px; font-size:12px }
+    .card img{ height:auto; aspect-ratio:1/1 }
+  }
   :focus-visible{ outline:2px solid var(--gold); outline-offset:2px }
 </style>
 </head>
@@ -58,7 +84,7 @@
 <header class="hbo-nav">
   <div class="hbo-nav-left">
     <a href="index.html" class="hbo-logo"><div class="hbo-logo-mark">FC</div> CANES <span>EL RITUAL</span></a>
-    <nav class="hbo-links"><a href="index.html#cartelera">Cartelera</a><a href="galeria-actores.html" class="active">Reparto</a><a href="galeria-directores.html">Dirección</a><a href="juegos.html">Juegos</a><a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener">Boleto</a></nav>
+    <nav class="hbo-links" id="navLinks"><a href="index.html#cartelera">Cartelera</a><a href="galeria-actores.html" class="active">Reparto</a><a href="galeria-directores.html">Dirección</a><a href="juegos.html">Juegos</a><a href="https://docs.google.com/forms/d/1GrdsSUS2eG3DZKfMfwADXoi5fQ60P7c-VUIzNrrNNOs/edit" target="_blank" rel="noopener">Boleto</a></nav>
   </div>
   <div class="hbo-nav-right">
     <div class="lens" title="Lente visión perro / humana">
@@ -67,6 +93,7 @@
       <button class="lens-icon" id="iconHuman" aria-label="Visión humana" style="border:none; cursor:pointer; background:transparent">🧑</button>
     </div>
     <div class="hbo-profile" aria-hidden="true">P</div>
+    <button class="nav-burger" id="navBurger" aria-label="Abrir menú" aria-expanded="false">☰</button>
   </div>
 </header>
 <main class="wrap">
@@ -99,6 +126,16 @@
   const html=document.documentElement, t=document.getElementById('themeToggle'), paw=document.getElementById('iconPaw'), hum=document.getElementById('iconHuman');
   let dog=true; function upd(){ html.setAttribute('data-theme',dog?'dog':'human'); paw.style.opacity=dog?'1':'.35'; paw.style.background=dog?'var(--gold)':'transparent'; paw.style.color=dog?'#0a0a0a':'inherit'; hum.style.opacity=!dog?'1':'.35'; hum.style.background=!dog?'var(--gold)':'transparent'; hum.style.color=!dog?'#0a0a0a':'inherit'; }
   t.addEventListener('click',()=>{dog=!dog; upd()}); paw.addEventListener('click',()=>{if(!dog){dog=true; upd()}}); hum.addEventListener('click',()=>{if(dog){dog=false; upd()}});
+  /* Menú hamburguesa (mobile) */
+  (function(){
+    var burger=document.getElementById('navBurger'), links=document.getElementById('navLinks');
+    if(!burger) return;
+    burger.addEventListener('click', function(){
+      var open=links.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open?'true':'false');
+      burger.textContent=open?'✕':'☰';
+    });
+  })();
 </script>
 </body>
 </html>
